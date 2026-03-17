@@ -39,8 +39,8 @@ VALIDATE $? "Enabling NodeJS:18"
 dnf install nodejs -y &>> $LOGFILE
 VALIDATE $? "Installing NodeJS:18"
 
-useradd roboshop &>> $LOGFILE
-VALIDATE $? "creating roboshop var"
+useradd ecommerce &>> $LOGFILE
+VALIDATE $? "creating ecommerece var"
 
 mkdir /app &>> $LOGFILE
 VALIDATE $? "creating app directory"
