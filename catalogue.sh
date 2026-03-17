@@ -40,10 +40,18 @@ VALIDATE $? "Enabling NodeJS:18"
 dnf install nodejs -y &>> $LOGFILE
 VALIDATE $? "Installing NodeJS:18"
 
-useradd ecommerce &>> $LOGFILE
-VALIDATE $? "creating ecommerece var"
+id ecommerce
+if [ $? -ne 0 ]
+then
+    useradd ecommerce
+    VALIDATE $? "ecommerce user creation"
+else
+    echo -e "E-commerce user already exist $Y Skipping $N"
+fi
 
-mkdir /app &>> $LOGFILE
+VALIDATE $? "creating e-commerce user"
+
+mkdir -p /app &>> $LOGFILE
 VALIDATE $? "creating app directory"
 
 curl -o /tmp/catalogue.zip https://roboshop-builds.s3.amazonaws.com/catalogue.zip  &>> $LOGFILE
