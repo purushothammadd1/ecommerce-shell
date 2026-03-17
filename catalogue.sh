@@ -49,8 +49,6 @@ else
     echo -e "E-commerce user already exist $Y Skipping $N"
 fi
 
-VALIDATE $? "creating e-commerce user"
-
 mkdir -p /app &>> $LOGFILE
 VALIDATE $? "creating app directory"
 
