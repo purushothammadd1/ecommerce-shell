@@ -6,7 +6,8 @@ R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-MONGDB_HOST=mongodb.purushothamai.online
+
+MONGODB_HOST=mongodb.purushothamai.online
 
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
@@ -26,10 +27,10 @@ VALIDATE(){
 if [ $ID -ne 0 ]
 then
     echo -e "$R ERROR:: Please run this script with root access $N"
-    exit 1 #you can give other than 0
+    exit 1
 else
     echo -e "$G You are root user $N"
-fi #fi means reverse of if, indicating condition end
+fi
 
 dnf module disable nodejs -y &>> $LOGFILE
 VALIDATE $? "Disabling current NodeJS"
@@ -52,7 +53,7 @@ fi
 mkdir -p /app &>> $LOGFILE
 VALIDATE $? "creating app directory"
 
-curl -o /tmp/user.zip https://roboshop-builds.s3.amazonaws.com/user.zip  &>> $LOGFILE
+curl -o /tmp/user.zip https://roboshop-builds.s3.amazonaws.com/user.zip &>> $LOGFILE
 VALIDATE $? "Downloading user application"
 
 cd /app
@@ -63,8 +64,7 @@ VALIDATE $? "unzipping user"
 npm install &>> $LOGFILE
 VALIDATE $? "Installing dependencies"
 
-cp /home/centos/ecommerce-shell/user.service /etc/systemd/system/user.service
-
+cp /home/centos/ecommerce-shell/user.service /etc/systemd/system/user.service &>> $LOGFILE
 VALIDATE $? "copying user service file"
 
 systemctl daemon-reload &>> $LOGFILE
@@ -74,17 +74,13 @@ systemctl enable user &>> $LOGFILE
 VALIDATE $? "Enable user"
 
 systemctl start user &>> $LOGFILE
-
 VALIDATE $? "Starting user"
 
-cp /home/centos/ecommerce-shell/user.service /etc/systemd/system/user.service
-
+cp /home/centos/ecommerce-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
 VALIDATE $? "copying mongodb repo"
 
-dnf install mongodb-org-shell -y &>> $LOGFILE
-
+dnf install mongodb-mongosh -y &>> $LOGFILE
 VALIDATE $? "Installing MongoDB client"
 
-mongo --host $MONGODB_HOST </app/schema/user.js &>> $LOGFILE
-
+mongosh --host $MONGODB_HOST </app/schema/user.js &>> $LOGFILE
 VALIDATE $? "Loading user data into MongoDB"
