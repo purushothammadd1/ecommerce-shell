@@ -63,7 +63,7 @@ VALIDATE $? "unzipping user"
 npm install &>> $LOGFILE
 VALIDATE $? "Installing dependencies"
 
-cp /home/centos/roboshop-shell/user.service /etc/systemd/system/user.service
+cp /home/centos/ecommerce-shell/user.service /etc/systemd/system/user.service
 
 VALIDATE $? "copying user service file"
 
@@ -77,7 +77,7 @@ systemctl start user &>> $LOGFILE
 
 VALIDATE $? "Starting user"
 
-cp /home/centos/ecommerce-shell/mongo.repo /etc/yum.repos.d/mongo.repo
+cp /home/centos/ecommerce-shell/user.service /etc/systemd/system/user.service
 
 VALIDATE $? "copying mongodb repo"
 
