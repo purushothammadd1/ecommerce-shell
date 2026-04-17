@@ -34,7 +34,7 @@ cp mongo.repo /etc/yum.repos.d/ &>> LOGFILE
 
 VALIDATE $? "Copied MongoDB Repo"
 
-yum install mongodb-org -y &>> $LOGFILE
+dnf install mongodb-org -y &>> $LOGFILE
 
 VALIDATE $? "Installing MongoDB"
 
