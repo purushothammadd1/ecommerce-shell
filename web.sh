@@ -48,29 +48,29 @@ else
     echo -e "E-commerce user already exist $Y Skipping $N"
 fi
 
-dnf install nginx -y
+dnf install nginx -y &>> $LOGFILE
 VALIDATE $? "installing nginx"
 
-systemctl enable nginx
+systemctl enable nginx &>> $LOGFILE
 VALIDATE $? "enabling nginx"
 
-systemctl start nginx
+systemctl start nginx &>> $LOGFILE
 VALIDATE $? "starting nginx server"
 
-rm -rf /usr/share/nginx/html/*
+rm -rf /usr/share/nginx/html/* &>> $LOGFILE
 VALIDATE $? "remove default website"
 
-curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip
+curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip &>> $LOGFILE
 VALIDATE $? "Downloaded web application"
 
-cd /usr/share/nginx/html
+cd /usr/share/nginx/html &>> $LOGFILE
 VALIDATE $? "moving nginx html directory"
 
-unzip -o /tmp/web.zip
+unzip -o /tmp/web.zip &>> $LOGFILE
 VALIDATE $? "unziped web folder"
 
-cp /home/centos/ecommerce-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf 
+cp /home/centos/ecommerce-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf &>> $LOGFILE
 VALIDATE $? "copied roboshop reverse proxy config"
 
-systemctl restart nginx
+systemctl restart nginx &>> $LOGFILE
 VALIDATE $? "restarting nginx server"
