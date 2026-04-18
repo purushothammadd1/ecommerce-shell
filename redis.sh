@@ -32,11 +32,11 @@ else
 fi #fi means reverse of if, indicating condition end
 
 
-dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y 
-VALIDATE $? "Installing remi release"
+# dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y 
+# VALIDATE $? "Installing remi release"
 
-dnf module enable redis:remi-6.2 -y
-VALIDATE $? "enabling redis"
+# dnf module enable redis:remi-6.2 -y
+# VALIDATE $? "enabling redis"
 
 dnf install redis -y
 VALIDATE $? "installing redis"
@@ -44,8 +44,13 @@ VALIDATE $? "installing redis"
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/redis.conf
 VALIDATE $? "allowing remote connections"
 
+sed -i 's/protected-mode yes/protected-mode no/g' /etc/redis.conf
+VALIDATE $? "Disabling protected mode"
+
 systemctl enable redis
 VALIDATE $? "enabled redis"
 
 systemctl start redis
 VALIDATE $? "started redis"
+
+echo -e "$G Redis setup completed successfully $N"
