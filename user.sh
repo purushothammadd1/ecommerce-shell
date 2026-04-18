@@ -76,11 +76,11 @@ VALIDATE $? "Enable user"
 systemctl start user &>> $LOGFILE
 VALIDATE $? "Starting user"
 
-cp /home/centos/ecommerce-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
+cp /home/centos/ecommerce-shell/mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "copying mongodb repo"
 
-dnf install mongodb-mongosh -y &>> $LOGFILE
+yum install mongodb-org-shell -y &>> $LOGFILE
 VALIDATE $? "Installing MongoDB client"
 
-mongosh --host $MONGODB_HOST </app/schema/user.js &>> $LOGFILE
+mongo --host $MONGDB_HOST </app/schema/user.js &>> $LOGFILE
 VALIDATE $? "Loading user data into MongoDB"
