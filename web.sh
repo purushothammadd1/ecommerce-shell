@@ -30,24 +30,6 @@ else
     echo -e "$G You are root user $N"
 fi
 
-dnf module disable nodejs -y &>> $LOGFILE
-VALIDATE $? "Disabling current NodeJS"
-
-dnf module enable nodejs:18 -y &>> $LOGFILE
-VALIDATE $? "Enabling NodeJS:18"
-
-dnf install nodejs -y &>> $LOGFILE
-VALIDATE $? "Installing NodeJS:18"
-
-id ecommerce
-if [ $? -ne 0 ]
-then
-    useradd ecommerce
-    VALIDATE $? "ecommerce user creation"
-else
-    echo -e "E-commerce user already exist $Y Skipping $N"
-fi
-
 dnf install nginx -y &>> $LOGFILE
 VALIDATE $? "installing nginx"
 
