@@ -56,6 +56,9 @@ VALIDATE $? "Downloading cart application"
 
 cd /app
 
+dnf install unzip -y &>> $LOGFILE
+VALIDATE $? "Installing unzip"
+
 unzip /tmp/cart.zip &>> $LOGFILE
 VALIDATE $? "unzipping cart"
 
