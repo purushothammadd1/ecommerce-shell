@@ -2,7 +2,7 @@
 Description = Catalogue Service
 
 [Service]
-User=roboshop
+User=ecommerce
 Environment=MONGO=true
 Environment=MONGO_URL="mongodb://mongodb.purushothamai.online:27017/catalogue"
 ExecStart=/bin/node /app/server.js
