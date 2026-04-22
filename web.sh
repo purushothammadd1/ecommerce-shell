@@ -1,16 +1,16 @@
 #!/bin/bash
 
 ID=$(id -u)
-
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
+MONGDB_HOST=mongodb.daws76s.online
 
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
 
-echo "Script started executing at $TIMESTAMP" &>> $LOGFILE
+echo "script stareted executing at $TIMESTAMP" &>> $LOGFILE
 
 VALIDATE(){
     if [ $1 -ne 0 ]
@@ -25,34 +25,43 @@ VALIDATE(){
 if [ $ID -ne 0 ]
 then
     echo -e "$R ERROR:: Please run this script with root access $N"
-    exit 1
+    exit 1 # you can give other than 0
 else
-    echo -e "$G You are root user $N"
-fi
+    echo "You are root user"
+fi # fi means reverse of if, indicating condition end
 
 dnf install nginx -y &>> $LOGFILE
-VALIDATE $? "installing nginx"
+ 
+VALIDATE $? "Installing nginx"
 
 systemctl enable nginx &>> $LOGFILE
-VALIDATE $? "enabling nginx"
+
+VALIDATE $? "Enable nginx" 
 
 systemctl start nginx &>> $LOGFILE
-VALIDATE $? "starting nginx server"
+
+VALIDATE $? "Starting Nginx"
 
 rm -rf /usr/share/nginx/html/* &>> $LOGFILE
-VALIDATE $? "remove default website"
+
+VALIDATE $? "removed default website"
 
 curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip &>> $LOGFILE
+
 VALIDATE $? "Downloaded web application"
 
 cd /usr/share/nginx/html &>> $LOGFILE
+
 VALIDATE $? "moving nginx html directory"
 
 unzip -o /tmp/web.zip &>> $LOGFILE
-VALIDATE $? "unziped web folder"
 
-cp /home/centos/ecommerce-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf &>> $LOGFILE
+VALIDATE $? "unzipping web"
+ 
+cp /home/centos/ecommerce-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf &>> $LOGFILE 
+
 VALIDATE $? "copied roboshop reverse proxy config"
 
 systemctl restart nginx &>> $LOGFILE
-VALIDATE $? "restarting nginx server"
+
+VALIDATE $? "restarted nginx"
