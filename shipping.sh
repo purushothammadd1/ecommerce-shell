@@ -41,17 +41,21 @@ else
     echo -e "E-commerce user already exist $Y Skipping $N"
 fi
 
-mkdir /app &>> $LOGFILE
-VALIDATE $? "Creating app directory"
 rm -rf /app/*
+
+mkdir -p /app &>> $LOGFILE
+VALIDATE $? "Creating app directory"
+
 curl -L -o /tmp/shipping.zip https://roboshop-builds.s3.amazonaws.com/shipping.zip &>> $LOGFILE
 VALIDATE $? "Downloading shipping"
 
 cd /app 
 VALIDATE $? "moving to app directory"
 
-unzip -o /tmp/shipping.zip &>> $LOGFILE
+unzip -o /tmp/shipping.zip -d /app &>> $LOGFILE
 VALIDATE $? "unzipping shipping"
+
+chown -R ecommerce:ecommerce /app
 
 mvn clean package &>> $LOGFILE
 VALIDATE $? "Installing dependencies"
@@ -68,13 +72,22 @@ VALIDATE $? "daemon reloading"
 systemctl enable shipping &>> $LOGFILE
 VALIDATE $? "enabled shipping"
 
-systemctl start shipping &>> $LOGFILE
-VALIDATE $? "starting shipping"
+# systemctl start shipping &>> $LOGFILE
+# VALIDATE $? "starting shipping"
 
 dnf install mysql -y &>> $LOGFILE
 VALIDATE $? "install mysql client"
 
-mysql -h mysql.purushothamai.online -uroot -pRoboShop@1 < /app/schema/shipping.sql &>> $LOGFILE
+mysql -h mysql.purushothamai.online -uroot -p'RoboShop@1' -e "show databases;" &>> $LOGFILE
+VALIDATE $? "Checking MySQL connection"
+
+if [ ! -f /app/schema/shipping.sql ]
+then
+    echo -e "$R shipping.sql file not found $N"
+    exit 1
+fi
+
+mysql -h mysql.purushothamai.online -uroot -p'RoboShop@1' < /app/schema/shipping.sql &>> $LOGFILE
 VALIDATE $? "loading shipping data"
 
 systemctl restart shipping &>> $LOGFILE
