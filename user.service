@@ -1,7 +1,7 @@
 [Unit]
 Description = User Service
 [Service]
-User=roboshop
+User=ecommerce
 Environment=MONGO=true
 Environment=REDIS_HOST=redis.purushothamai.online
 Environment=MONGO_URL="mongodb://mongodb.purushothamai.online:27017/users"
