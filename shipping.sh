@@ -80,15 +80,17 @@ VALIDATE $? "install mysql client"
 
 mysql -h mysql.purushothamai.online -uroot -p'RoboShop@1' -e "show databases;" &>> $LOGFILE
 VALIDATE $? "Checking MySQL connection"
-
-if [ ! -f /app/schema/shipping.sql ]
+if [ ! -d /app/db ]
 then
-    echo -e "$R shipping.sql file not found $N"
+    echo -e "$R DB folder not found $N"
     exit 1
 fi
 
-mysql -h mysql.purushothamai.online -uroot -p'RoboShop@1' < /app/schema/shipping.sql &>> $LOGFILE
-VALIDATE $? "loading shipping data"
+for file in schema.sql app-user.sql master-data.sql
+do
+    mysql -h mysql.purushothamai.online -uroot -p'RoboShop@1' < /app/db/$file &>> $LOGFILE
+    VALIDATE $? "loading $file"
+done
 
 systemctl restart shipping &>> $LOGFILE
 VALIDATE $? "restart shipping"
