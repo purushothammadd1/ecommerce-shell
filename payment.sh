@@ -33,20 +33,28 @@ fi # fi means reverse of if, indicating condition end
 dnf install python36 gcc python3-devel -y  &>> $LOGFILE
 VALIDATE $? "Installing python"
 
-useradd ecommerce  &>> $LOGFILE
-VALIDATE $? "adding a username"
+id ecommerce &>> $LOGFILE
+if [ $? -ne 0 ]
+then
+    useradd ecommerce &>> $LOGFILE
+    VALIDATE $? "adding ecommerce user"
+else
+    echo -e "ecommerce user already exist $Y Skipping $N"
+fi
 
-mkdir /app  &>> $LOGFILE
+mkdir -p /app  &>> $LOGFILE
 VALIDATE $? "make directory"
 
 curl -L -o /tmp/payment.zip https://roboshop-builds.s3.amazonaws.com/payment.zip  &>> $LOGFILE
-VALIDATE "zipping the payment folder"
+VALIDATE $? "zipping the payment folder"
 
 cd /app &>> $LOGFILE
 VALIDATE $? "change directory"
 
 unzip -o /tmp/payment.zip &>> $LOGFILE
 VALIDATE $? "unzipping directory"
+
+chown -R ecommerce:ecommerce /app &>> $LOGFILE
 
 pip3.6 install -r requirements.txt &>> $LOGFILE
 VALIDATE $? "Install the requirement in pip"
