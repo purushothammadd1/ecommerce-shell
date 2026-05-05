@@ -1,13 +1,13 @@
 #!/bin/bash
 
-AMI = "ami-0b4f379183e5706b9"
-SG_ID = "sg-05ce96a47ef68eb4c"
-INSTANCES = ("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch" "web")
+AMI="ami-0b4f379183e5706b9"
+SG_ID="sg-05ce96a47ef68eb4c"
+INSTANCES=("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch" "web")
 
 for i in "${INSTANCES[@]}"
 do
     echo "instance is: $i"
-    if [ $i == "mongodb" ] || [ $i == "mysql" ] || [ $i == "shipping" ]
+    if [[ $i == "mongodb" ||  $i == "mysql" || $i == "shipping" ]]
     then
         INSTANCE_TYPE="t3.small"
     else
